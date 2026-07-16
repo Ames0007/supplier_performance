@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# Env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build / cache
+*.tsbuildinfo
+.turbo/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local logs
+*.log
+.npm-install.log

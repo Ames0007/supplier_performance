@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens — UX_FOUNDATIONS §F1 (semantic token names are authoritative).
+ * Values are HSL triplets consumed via hsl(var(--token)) in tailwind.config.ts.
+ *
+ * NOTE (remaining dependency): the UM6P brand primary (green) is marked
+ * `[UM6P VALIDATION REQUIRED: hex]` in the UX docs. The green below is a
+ * provisional brand value pending official UM6P brand guidelines.
+ */
+@layer base {
+  :root {
+    --bg: 210 20% 98%;
+    --surface: 0 0% 100%;
+    --surface-2: 210 20% 96%;
+    --border: 214 20% 90%;
+    --border-strong: 214 16% 82%;
+    --fg: 222 24% 12%;
+    --fg-muted: 220 12% 38%;
+    --fg-subtle: 220 10% 55%;
+
+    --primary: 152 52% 34%; /* UM6P green (provisional) */
+    --primary-fg: 0 0% 100%;
+
+    --success: 142 62% 36%;
+    --warning: 35 92% 42%;
+    --danger: 0 72% 48%;
+    --info: 212 78% 46%;
+
+    --focus-ring: 152 55% 40%;
+  }
+
+  .dark {
+    --bg: 222 32% 8%;
+    --surface: 222 26% 11%;
+    --surface-2: 222 22% 15%;
+    --border: 220 16% 22%;
+    --border-strong: 220 14% 30%;
+    --fg: 210 20% 96%;
+    --fg-muted: 214 14% 70%;
+    --fg-subtle: 214 12% 55%;
+
+    --primary: 152 48% 46%;
+    --primary-fg: 0 0% 100%;
+
+    --success: 142 55% 48%;
+    --warning: 35 90% 56%;
+    --danger: 0 70% 60%;
+    --info: 212 80% 62%;
+
+    --focus-ring: 152 55% 55%;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: hsl(var(--bg));
+    color: hsl(var(--fg));
+    font-feature-settings:
+      "cv11",
+      "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Numeric figures line up (tables, KPIs) — UX_FOUNDATIONS §F1. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Keyboard focus (2px, ≥3:1 contrast) — UX_FOUNDATIONS §F15. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--focus-ring));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
