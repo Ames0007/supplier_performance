@@ -29,8 +29,18 @@ describe("public development mode flag", () => {
 
   it("is DISABLED for non-'true' flag values in production", () => {
     vi.stubEnv("NODE_ENV", "production");
-    vi.stubEnv("NEXT_PUBLIC_PUBLIC_DEMO", "false");
-    expect(isPublicDemoMode()).toBe(false);
+    for (const v of ["false", "", "1", "yes", "0"]) {
+      vi.stubEnv("NEXT_PUBLIC_PUBLIC_DEMO", v);
+      expect(isPublicDemoMode()).toBe(false);
+    }
+  });
+
+  it("tolerates case and surrounding whitespace in the flag value", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    for (const v of ["true", "True", "TRUE", " true", "true ", "  TrUe  "]) {
+      vi.stubEnv("NEXT_PUBLIC_PUBLIC_DEMO", v);
+      expect(isPublicDemoMode()).toBe(true);
+    }
   });
 });
 

@@ -25,10 +25,11 @@ import { ROLES, type RoleCode } from "./roles";
  * the value reflects the runtime environment and is unit-testable via stubs.
  */
 export function isPublicDemoMode(): boolean {
-  return (
-    process.env.NODE_ENV === "development" ||
-    process.env.NEXT_PUBLIC_PUBLIC_DEMO === "true"
-  );
+  if (process.env.NODE_ENV === "development") return true;
+  // Tolerate case/whitespace so a Vercel value like "True" or " true " still
+  // counts (the direct `process.env.NEXT_PUBLIC_*` reference stays statically
+  // inlinable by Next at build time).
+  return (process.env.NEXT_PUBLIC_PUBLIC_DEMO ?? "").trim().toLowerCase() === "true";
 }
 
 /** Text of the banner shown on every page while Public Development Mode is on. */
