@@ -9,3 +9,4 @@ export { Brand } from "./Brand";
 export { ThemeToggle } from "./ThemeToggle";
 export { LangToggle } from "./LangToggle";
 export { UserMenu } from "./UserMenu";
+export { PublicDemoBanner } from "./PublicDemoBanner";

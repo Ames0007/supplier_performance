@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- **Public Development Mode** (temporary, flag-gated auth bypass for dev/demos): enabled when `NODE_ENV=development` or `NEXT_PUBLIC_PUBLIC_DEMO=true`; every request acts as the "Development Administrator" (SUPER_ADMIN), the sign-in page redirects to the dashboard, and a banner is shown on every page. Supabase Auth, Entra, middleware, RBAC, and audit are **not** removed — only the login requirement is bypassed. Off in Preview/Production without the flag. See `docs/PUBLIC_DEVELOPMENT_MODE.md`.
 - **Repository governance**: `LICENSE` (MIT), `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md`, and an expanded professional `README.md`.
 - **GitHub migration**: project published to `github.com/Ames0007/supplier_performance` as the source of truth.
 

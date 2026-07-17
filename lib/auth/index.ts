@@ -19,3 +19,4 @@ export type { SessionUser, SessionResolver } from "./session";
 export { requireSession, requirePermission, can, canAny } from "./guards";
 export { evaluateAccess, isPublicPath } from "./access-policy";
 export type { AccessInput, AccessDecision } from "./access-policy";
+export { isPublicDemoMode, PUBLIC_DEMO_BANNER_TEXT, PUBLIC_DEMO_USER } from "./dev-mode";

@@ -2,6 +2,7 @@ import type { Id } from "@/types";
 import { permissionsForRoles } from "./rbac";
 import { type PermissionCode } from "./permissions";
 import { type RoleCode } from "./roles";
+import { isPublicDemoMode, PUBLIC_DEMO_USER } from "./dev-mode";
 
 /**
  * The authenticated subject for the current request. Identity == DB identity in
@@ -65,6 +66,21 @@ export function hasSessionResolver(): boolean {
 }
 
 export async function getSession(): Promise<SessionUser | null> {
+  // PUBLIC DEVELOPMENT MODE (temporary, flag-gated): bypass the login
+  // requirement and resolve every request as the Development Administrator. This
+  // does NOT remove the real resolver below — it stays registered and is used
+  // whenever the mode is disabled (Preview/Production without the flag). RBAC and
+  // audit are unaffected: the demo user holds SUPER_ADMIN (ALL_PERMISSIONS), so
+  // guards pass and its actions are still audited. See docs/PUBLIC_DEVELOPMENT_MODE.md.
+  if (isPublicDemoMode()) {
+    return buildSession({
+      id: PUBLIC_DEMO_USER.id,
+      email: PUBLIC_DEMO_USER.email,
+      displayName: PUBLIC_DEMO_USER.displayName,
+      roleCodes: PUBLIC_DEMO_USER.roleCodes,
+    });
+  }
+
   // FAIL-CLOSED: no resolver registered (composition root did not run) ⇒ no
   // session. The resolver is registered at startup in instrumentation.ts, the
   // same way audit subscribers are wired to the event bus. `lib/auth` stays free

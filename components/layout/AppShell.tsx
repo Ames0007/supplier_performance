@@ -18,7 +18,7 @@ export function AppShell({
   children: ReactNode;
 }) {
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-full flex-col">
       <TopBar user={user} />
       <div className="flex flex-1 overflow-hidden">
         <aside className="hidden lg:block">

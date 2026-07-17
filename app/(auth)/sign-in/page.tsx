@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Boxes } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { isPublicDemoMode } from "@/lib/auth";
 import { MicrosoftSignInButton } from "@/features/authentication";
 
 export const metadata: Metadata = { title: "Connexion" };
@@ -15,6 +17,9 @@ export default async function SignInPage({
 }: {
   searchParams: Promise<{ returnTo?: string; error?: string }>;
 }) {
+  // PUBLIC DEVELOPMENT MODE: no login required — go straight to the dashboard.
+  if (isPublicDemoMode()) redirect("/");
+
   const params = await searchParams;
   const next = safeNext(params.returnTo);
   const hasError = params.error !== undefined;
