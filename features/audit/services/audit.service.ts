@@ -7,11 +7,18 @@ import {
 import { InMemoryAuditRepository, type AuditRepository } from "../repositories/audit.repository";
 
 /**
- * Audit write helper + reader (the P0 "audit skeleton"). `record` stamps the
- * standard fields and appends an immutable entry. There is no update/delete.
+ * Audit write helper + reader. `record` stamps the standard fields and appends
+ * an immutable entry — there is no update/delete. Every record carries a REAL
+ * actor (or the explicit "Système" system actor); it never relies on a demo
+ * identity.
  */
 export class AuditService {
-  constructor(private readonly repo: AuditRepository = new InMemoryAuditRepository()) {}
+  constructor(private repo: AuditRepository = new InMemoryAuditRepository()) {}
+
+  /** Composition-root swap to the production (Supabase) audit store. */
+  setRepository(repo: AuditRepository): void {
+    this.repo = repo;
+  }
 
   async record(input: RecordAuditInput): Promise<AuditRecord> {
     const now = new Date().toISOString();
@@ -38,9 +45,15 @@ export class AuditService {
     return this.repo.list(filter);
   }
 
-  /** Viewing the audit log is itself audited (DOMAIN_MODEL §3.23). */
-  async recordView(viewerName: string): Promise<void> {
-    await this.record({ actorName: viewerName, action: AUDIT_ACTIONS.AUDIT_VIEWED, entityType: "audit" });
+  /** Viewing the audit log is itself audited with the real viewer (DOMAIN_MODEL §3.23). */
+  async recordView(actor: { id: string; name: string }): Promise<void> {
+    await this.record({
+      actorType: "USER",
+      actorId: actor.id,
+      actorName: actor.name,
+      action: AUDIT_ACTIONS.AUDIT_VIEWED,
+      entityType: "audit",
+    });
   }
 }
 

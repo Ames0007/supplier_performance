@@ -51,6 +51,7 @@ export class InMemoryAuditRepository implements AuditRepository {
     }
     if (filter?.action) result = result.filter((r) => r.action === filter.action);
     if (filter?.entityType) result = result.filter((r) => r.entityType === filter.entityType);
+    if (filter?.entityId) result = result.filter((r) => r.entityId === filter.entityId);
     if (filter?.search) {
       const needle = filter.search.toLowerCase();
       result = result.filter(

@@ -11,6 +11,8 @@ export default async function AuditLogPage() {
   if (!can(session, PERMISSIONS.AUDIT_READ)) return <PermissionDenied />;
 
   const records = await auditService.list();
+  // Viewing the audit log is itself audited, with the real viewer (DOMAIN_MODEL §3.23).
+  if (session) await auditService.recordView({ id: session.id, name: session.displayName });
 
   return (
     <div className="space-y-6">

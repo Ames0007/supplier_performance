@@ -45,6 +45,7 @@ export const ROLE_DEFINITIONS: Record<RoleCode, RoleDefinition> = {
     permissions: [
       P.SUPPLIERS_READ_ALL,
       P.SUPPLIERS_READ,
+      P.SUPPLIERS_MANAGE,
       P.PURCHASE_ORDERS_READ,
       P.EVALUATIONS_READ_ALL,
       P.MATRIX_READ,
@@ -61,6 +62,7 @@ export const ROLE_DEFINITIONS: Record<RoleCode, RoleDefinition> = {
     permissions: [
       P.SUPPLIERS_READ_ALL,
       P.SUPPLIERS_READ,
+      P.SUPPLIERS_MANAGE,
       P.PURCHASE_ORDERS_READ,
       P.EVALUATIONS_READ_ALL,
       P.MATRIX_READ,

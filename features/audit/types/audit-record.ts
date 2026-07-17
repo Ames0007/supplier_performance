@@ -12,6 +12,8 @@ export type AuditActorType = (typeof AUDIT_ACTOR_TYPE)[keyof typeof AUDIT_ACTOR_
  * this is a convenience catalog, not a closed enum.
  */
 export const AUDIT_ACTIONS = {
+  USER_SIGNED_IN: "auth.signed_in",
+  USER_SIGNED_OUT: "auth.signed_out",
   USER_PROVISIONED: "user.provisioned",
   USER_ROLE_ASSIGNED: "user.role_assigned",
   USER_DEACTIVATED: "user.deactivated",
@@ -53,5 +55,6 @@ export interface AuditFilter {
   readonly actor?: string;
   readonly action?: string;
   readonly entityType?: string;
+  readonly entityId?: string;
   readonly search?: string;
 }

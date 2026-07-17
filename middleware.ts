@@ -1,15 +1,34 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { evaluateAccess } from "@/lib/auth/access-policy";
+import { updateSession } from "@/lib/supabase/middleware";
 
 /**
- * Route-guard scaffold (Authentication foundation). The session is resolved
- * server-side (see lib/auth). Real Microsoft Entra / Supabase cookie validation
- * + redirect of unauthenticated users on protected routes is wired at P1
- * completion; Phase 1 passes requests through.
+ * Production route protection (Authentication foundation). Refreshes the
+ * Supabase session cookies, then enforces the access policy:
+ *  - unauthenticated → redirect to /sign-in (with returnTo)
+ *  - authenticated on /sign-in → redirect to /
+ * Fail-closed: when Supabase is unconfigured, requests are treated as
+ * unauthenticated (no anonymous access to protected routes).
  */
-export function middleware(_request: NextRequest): NextResponse {
-  return NextResponse.next();
+export async function middleware(request: NextRequest): Promise<NextResponse> {
+  const { response, userId } = await updateSession(request);
+
+  const decision = evaluateAccess({
+    pathname: request.nextUrl.pathname,
+    authenticated: userId !== null,
+  });
+
+  if (decision.action === "redirect" && decision.to) {
+    const url = request.nextUrl.clone();
+    const [pathname, query] = decision.to.split("?");
+    url.pathname = pathname ?? "/";
+    url.search = query ? `?${query}` : "";
+    return NextResponse.redirect(url);
+  }
+
+  return response;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/health).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

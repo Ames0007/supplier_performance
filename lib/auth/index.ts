@@ -9,6 +9,13 @@ export {
 } from "./roles";
 export type { RoleCode, RoleDefinition } from "./roles";
 export { permissionsForRoles, hasPermission, hasAnyPermission } from "./rbac";
-export { getSession, buildSession } from "./session";
-export type { SessionUser } from "./session";
+export {
+  getSession,
+  buildSession,
+  setSessionResolver,
+  hasSessionResolver,
+} from "./session";
+export type { SessionUser, SessionResolver } from "./session";
 export { requireSession, requirePermission, can, canAny } from "./guards";
+export { evaluateAccess, isPublicPath } from "./access-policy";
+export type { AccessInput, AccessDecision } from "./access-policy";

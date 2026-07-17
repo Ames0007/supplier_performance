@@ -13,9 +13,10 @@ export const PERMISSIONS = {
   ADMIN_SETTINGS_MANAGE: "admin.settings.manage",
   // Audit (foundation)
   AUDIT_READ: "audit.read",
-  // Suppliers (deferred)
+  // Suppliers
   SUPPLIERS_READ: "suppliers.read",
   SUPPLIERS_READ_ALL: "suppliers.read.all",
+  SUPPLIERS_MANAGE: "suppliers.manage",
   // Purchase orders (deferred)
   PURCHASE_ORDERS_READ: "purchase_orders.read",
   PURCHASE_ORDERS_SYNC: "purchase_orders.sync",
@@ -55,7 +56,11 @@ export const PERMISSION_GROUPS: ReadonlyArray<{
   {
     resource: "suppliers",
     labelFr: "Fournisseurs",
-    permissions: [PERMISSIONS.SUPPLIERS_READ, PERMISSIONS.SUPPLIERS_READ_ALL],
+    permissions: [
+      PERMISSIONS.SUPPLIERS_READ,
+      PERMISSIONS.SUPPLIERS_READ_ALL,
+      PERMISSIONS.SUPPLIERS_MANAGE,
+    ],
   },
   {
     resource: "purchase_orders",

@@ -42,7 +42,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Fournisseurs",
     items: [
-      { label: "Fournisseurs", href: "/suppliers", icon: Building2, permission: PERMISSIONS.SUPPLIERS_READ, enabled: false },
+      { label: "Fournisseurs", href: "/suppliers", icon: Building2, permission: PERMISSIONS.SUPPLIERS_READ, enabled: true },
       { label: "Risque", href: "/risk", icon: ShieldAlert, permission: PERMISSIONS.SUPPLIERS_READ_ALL, enabled: false },
       { label: "Portefeuille", href: "/portfolio", icon: Briefcase, permission: PERMISSIONS.DASHBOARDS_VIEW_EXECUTIVE, enabled: false },
     ],

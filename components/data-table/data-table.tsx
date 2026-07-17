@@ -64,7 +64,7 @@ export function DataTable<T>({
                   key={column.key}
                   className={cn(
                     "px-4 py-3 text-fg",
-                    column.align === "right" ? "text-right tabular" : "text-left",
+                    column.align === "right" ? "text-right tabular-nums" : "text-left",
                     column.className,
                   )}
                 >

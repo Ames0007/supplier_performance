@@ -35,4 +35,32 @@ describe("AuditService", () => {
     const records = await service.list();
     expect(records.some((r) => r.action === "user.role_assigned")).toBe(true);
   });
+
+  it("resolves the REAL actor from the event payload (never a demo identity)", async () => {
+    const bus = new EventBus();
+    const service = new AuditService(new InMemoryAuditRepository([]));
+    registerAuditSubscribers(bus, service);
+    await bus.publish(
+      createEvent("UserRoleAssigned", {
+        userId: "u1",
+        roleCodes: ["PURCHASER"],
+        actorId: "admin-1",
+        actorName: "Administrateur SPM",
+      }),
+    );
+    const [record] = await service.list();
+    expect(record?.actorType).toBe("USER");
+    expect(record?.actorId).toBe("admin-1");
+    expect(record?.actorName).toBe("Administrateur SPM");
+  });
+
+  it("falls back to the SYSTEM actor when no actor is present in the payload", async () => {
+    const bus = new EventBus();
+    const service = new AuditService(new InMemoryAuditRepository([]));
+    registerAuditSubscribers(bus, service);
+    await bus.publish(createEvent("UserDeactivated", { userId: "u1" }));
+    const [record] = await service.list();
+    expect(record?.actorType).toBe("SYSTEM");
+    expect(record?.actorName).toBe("Système");
+  });
 });

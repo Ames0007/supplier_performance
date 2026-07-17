@@ -2,12 +2,17 @@ import { ROLES } from "@/lib/auth";
 import type { UserEntity, UserFilter } from "../types/user";
 
 /**
- * Persistence port for users. The concrete Supabase implementation is wired at
- * P1 completion; Phase 1 uses the deterministic in-memory implementation below.
+ * Persistence port for users. Two implementations exist behind this interface:
+ *  - InMemoryUserRepository (dev/test/fallback — this file)
+ *  - SupabaseUserRepository (production — ./supabase-user.repository)
+ * The production implementation is selected at the composition root
+ * (configureAdministrationPersistence) when Supabase is configured.
  */
 export interface UserRepository {
   list(filter?: UserFilter): Promise<UserEntity[]>;
   findById(id: string): Promise<UserEntity | null>;
+  findByEmail(email: string): Promise<UserEntity | null>;
+  findByIdentityRef(identityRef: string): Promise<UserEntity | null>;
   save(user: UserEntity): Promise<UserEntity>;
   countActiveAdmins(): Promise<number>;
 }
@@ -96,6 +101,15 @@ export class InMemoryUserRepository implements UserRepository {
 
   async findById(id: string): Promise<UserEntity | null> {
     return this.users.get(id) ?? null;
+  }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const needle = email.toLowerCase();
+    return [...this.users.values()].find((u) => u.email.toLowerCase() === needle) ?? null;
+  }
+
+  async findByIdentityRef(identityRef: string): Promise<UserEntity | null> {
+    return [...this.users.values()].find((u) => u.identityRef === identityRef) ?? null;
   }
 
   async save(user: UserEntity): Promise<UserEntity> {

@@ -45,4 +45,25 @@ describe("UserService", () => {
     const result = await makeService().deactivate("unknown-id");
     expect(result.ok).toBe(false);
   });
+
+  it("JIT-provisions a new user with the default role on first identity sight", async () => {
+    const user = await makeService().provisionFromIdentity({
+      subjectId: "sub-new",
+      email: "new@um6p.ma",
+      displayName: "Nouvel Utilisateur",
+    });
+    expect(user.roleCodes).toEqual([ROLES.EVALUATOR]);
+    expect(user.status).toBe("ACTIVE");
+    expect(user.identityRef).toBe("sub-new");
+  });
+
+  it("resolves an existing user by email without creating a duplicate", async () => {
+    const user = await makeService().provisionFromIdentity({
+      subjectId: "sub-x",
+      email: "directeur@um6p.ma",
+      displayName: "Directeur",
+    });
+    expect(user.id).toBe(DIRECTOR_ID);
+    expect(user.roleCodes).toEqual([ROLES.PROCUREMENT_DIRECTOR]);
+  });
 });

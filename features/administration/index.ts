@@ -1,5 +1,7 @@
 /** Administration bounded context (C9) — public API barrel. */
 export { UserService, userService, USER_EVENTS } from "./services/user.service";
+export type { Actor, ProvisionIdentity } from "./services/user.service";
+export { configureAdministrationPersistence } from "./persistence";
 export { USER_STATUS } from "./types/user";
 export type { UserEntity, UserStatus, UserFilter } from "./types/user";
 export {
