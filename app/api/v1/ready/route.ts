@@ -33,6 +33,14 @@ export function GET() {
         supabase: supabaseConfigured ? "configured" : "not-configured",
         demoMode: demoMode ? "on" : "off",
       },
+      // Diagnostic: what this running function actually sees for the (public,
+      // non-secret) demo flag. If `NEXT_PUBLIC_PUBLIC_DEMO` is null/not "true"
+      // here, the variable is absent from THIS deployment's environment — a
+      // Vercel scope/redeploy issue, not a code issue.
+      env: {
+        nodeEnv: process.env.NODE_ENV ?? null,
+        NEXT_PUBLIC_PUBLIC_DEMO: process.env.NEXT_PUBLIC_PUBLIC_DEMO ?? null,
+      },
       timestamp: new Date().toISOString(),
     },
     // Always 200 in dev: the app is intentionally usable without Supabase

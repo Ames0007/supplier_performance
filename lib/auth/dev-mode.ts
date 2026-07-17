@@ -21,15 +21,21 @@ import { ROLES, type RoleCode } from "./roles";
  * In Preview/Production with the flag unset, isPublicDemoMode() is false and the
  * real, fail-closed authentication path is used unchanged.
  *
- * NOTE: env vars are read inside the function (not captured at module load) so
- * the value reflects the runtime environment and is unit-testable via stubs.
+ * NOTE: read INSIDE the function (never captured in a module-scope constant) so
+ * the result is never cached and is unit-testable via env stubs. Case/whitespace
+ * are tolerated so "True" / " true " still count.
+ *
+ * Next.js caveat: `NEXT_PUBLIC_*` values are INLINED at BUILD time in the client
+ * and Edge (middleware) bundles — so on Vercel the variable must be present when
+ * `next build` runs to affect those. Server code (route handlers, RSC) also reads
+ * it at runtime. If the deployed value is wrong, the fix is a Vercel env/build
+ * one, not a code one. See docs/PUBLIC_DEVELOPMENT_MODE.md.
  */
 export function isPublicDemoMode(): boolean {
-  if (process.env.NODE_ENV === "development") return true;
-  // Tolerate case/whitespace so a Vercel value like "True" or " true " still
-  // counts (the direct `process.env.NEXT_PUBLIC_*` reference stays statically
-  // inlinable by Next at build time).
-  return (process.env.NEXT_PUBLIC_PUBLIC_DEMO ?? "").trim().toLowerCase() === "true";
+  return (
+    process.env.NODE_ENV === "development" ||
+    String(process.env.NEXT_PUBLIC_PUBLIC_DEMO).trim().toLowerCase() === "true"
+  );
 }
 
 /** Text of the banner shown on every page while Public Development Mode is on. */
